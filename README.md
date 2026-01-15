@@ -71,7 +71,7 @@ venv\Scripts\activate
 3. устанавливаем зависимости
 
 ```bash
-pip -r install requirements.txt
+pip install -r requiremets.txt
 ```
 
 4. переменная окружения ,env и база данных
@@ -94,8 +94,9 @@ https://docs.rkeeper.ru/rk7/7.7.0/ru/ustanovka-postgresql-na-windows-29421153.ht
 CREATE DATABASE db;
 CREATE USER user WITH PASSWORD 'password';
 GRANT ALL PRIVILEGES ON DATABASE db TO user;
+ALTER USER user WITH SUPERUSER;
 ```
-для запуска тестов нужно, чтобы роль пользователя имела CREATE EXTENSION для postgis!
+Без прав суперпользователя PostgreSQL запрещает эти операции, и миграции завершаются ошибкой, поэтому нужны правва суперпользователя
 
 пример .env
 ```
@@ -287,6 +288,32 @@ curl -X DELETE "http://127.0.0.1:8000/api/messages/4/" \
 ожидается статус код 204
 при попытке удалить несуществующее сообщение - 404
 при попытке удалить чужое сообщение - 403 (удалять можно только свои сообщения!)
+
+13. get запрос без авторизации
+```bash
+curl -X GET http://127.0.0.1:8000/api/points/
+```
+
+ожидаемый вывод
+```
+{"detail":"Учетные данные не были предоставлены."}
+```
+
+14. post запрос без авторизации
+```bash
+curl -X POST http://127.0.0.1:8000/api/points/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "x": 10,
+    "y": 20
+  }'
+
+```
+
+ожидаемый вывод
+```
+{"detail":"Учетные данные не были предоставлены."}
+```
 
 
 ## тесты
