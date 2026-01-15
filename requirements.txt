@@ -1,30 +1,18 @@
-# requirements.txt
-
-# Django и DRF (по ТЗ: Django 4+ или 5+, DRF)
+asgiref==3.11.0
 Django==6.0.1
 djangorestframework==3.16.1
-
-# Аутентификация JWT (ТЗ п.6: авторизация для всех эндпоинтов)
-djangorestframework-simplejwt==5.5.1
-
-# База данных (GeoDjango требует PostGIS)
-# ВАЖНО: GeoDjango встроен в Django, но нужен PostGIS в БД
-# Выберите ОДИН вариант:
-
-# Вариант 1: psycopg2 (рекомендуется для Django)
+djangorestframework_simplejwt==5.5.1
+iniconfig==2.3.0
+packaging==25.0
+pluggy==1.6.0
+psycopg==3.3.2
+psycopg-binary==3.3.2
+psycopg-pool==3.3.0
 psycopg2-binary==2.9.11
-
-# ИЛИ Вариант 2: psycopg3 (новая версия)
-# psycopg[binary]==3.3.2
-
-# Тестирование (ТЗ: pytest или Django TestCase)
+Pygments==2.19.2
+PyJWT==2.10.1
 pytest==9.0.2
 pytest-django==4.11.1
-
-# Утилиты
 python-dotenv==1.2.1
-
-# Опционально для разработки:
-# black==24.1.1  # форматирование
-# flake8==7.0.0  # линтинг
-# isort==5.13.2  # сортировка импортов
+sqlparse==0.5.5
+typing_extensions==4.15.0
