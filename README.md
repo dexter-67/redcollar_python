@@ -159,7 +159,7 @@ curl -X POST http://127.0.0.1:8000/api/token/refresh/ \
 ```bash
 curl -X POST http://127.0.0.1:8000/api/points/ \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY4NTA1MjQ1LCJpYXQiOjE3Njg1MDE2NDUsImp0aSI6ImZkZjBlZGE0NDY0ODQ2NWM4NmQ2ZGQzMTI2MTVmMzJkIiwidXNlcl9pZCI6IjEifQ.L5TLh-UJ_UC6b6AQFtQOiOsfASnJrfo0bCNk6kSivcs" \
+  -H "Authorization: Bearer <acces_token>" \
   -d '{                    
         "name": "Город Уфа",
         "latitude": 54.44,
@@ -175,7 +175,7 @@ curl -X POST http://127.0.0.1:8000/api/points/ \
 4. просмотр всех своих точек
 ```bash
 curl -X GET http://127.0.0.1:8000/api/points/ \
-  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY4NTA1MjQ1LCJpYXQiOjE3Njg1MDE2NDUsImp0aSI6ImZkZjBlZGE0NDY0ODQ2NWM4NmQ2ZGQzMTI2MTVmMzJkIiwidXNlcl9pZCI6IjEifQ.L5TLh-UJ_UC6b6AQFtQOiOsfASnJrfo0bCNk6kSivcs"
+  -H "Authorization: Bearer <acces_token>"
 ```
 
 ожидаемый вывод
@@ -185,8 +185,8 @@ curl -X GET http://127.0.0.1:8000/api/points/ \
 
 5. получение одной точки
 ```bash
-curl -X GET http://127.0.0.1:8000/api/points/29/ \
-  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY4NTA1MjQ1LCJpYXQiOjE3Njg1MDE2NDUsImp0aSI6ImZkZjBlZGE0NDY0ODQ2NWM4NmQ2ZGQzMTI2MTVmMzJkIiwidXNlcl9pZCI6IjEifQ.L5TLh-UJ_UC6b6AQFtQOiOsfASnJrfo0bCNk6kSivcs"
+curl -X GET http://127.0.0.1:8000/api/points/id/ \
+  -H "Authorization: Bearer <acces_token>"
 ```
 
 ожидаемый вывод
@@ -196,9 +196,9 @@ curl -X GET http://127.0.0.1:8000/api/points/29/ \
 
 6. обновление точки
 ```bash
-curl -X PATCH http://127.0.0.1:8000/api/points/29/ \
+curl -X PATCH http://127.0.0.1:8000/api/points/id/ \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY4NTA1MjQ1LCJpYXQiOjE3Njg1MDE2NDUsImp0aSI6ImZkZjBlZGE0NDY0ODQ2NWM4NmQ2ZGQzMTI2MTVmMzJkIiwidXNlcl9pZCI6IjEifQ.L5TLh-UJ_UC6b6AQFtQOiOsfASnJrfo0bCNk6kSivcs" \
+  -H "Authorization: Bearer <acces_token>" \
   -d '{
         "name": "Новая Эйфелева башня"
       }'
@@ -212,8 +212,8 @@ curl -X PATCH http://127.0.0.1:8000/api/points/29/ \
 
 7. удаление точки
 ```bash
-curl -X DELETE http://127.0.0.1:8000/api/points/29/ \
-  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY4NTA1MjQ1LCJpYXQiOjE3Njg1MDE2NDUsImp0aSI6ImZkZjBlZGE0NDY0ODQ2NWM4NmQ2ZGQzMTI2MTVmMzJkIiwidXNlcl9pZCI6IjEifQ.L5TLh-UJ_UC6b6AQFtQOiOsfASnJrfo0bCNk6kSivcs"
+curl -X DELETE http://127.0.0.1:8000/api/points/id/ \
+  -H "Authorization: Bearer <acces_token>"
 ```
 
 ожидается статус код 204
@@ -223,7 +223,7 @@ curl -X DELETE http://127.0.0.1:8000/api/points/29/ \
 если не указать радиус по умолчанию радиус будет равен 10 км
 ```bash
 curl -X GET "http://127.0.0.1:8000/api/points/search/?latitude=54.44&longitude=55.58&radius=5" \
-  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY4NTA1MjQ1LCJpYXQiOjE3Njg1MDE2NDUsImp0aSI6ImZkZjBlZGE0NDY0ODQ2NWM4NmQ2ZGQzMTI2MTVmMzJkIiwidXNlcl9pZCI6IjEifQ.L5TLh-UJ_UC6b6AQFtQOiOsfASnJrfo0bCNk6kSivcs"
+  -H "Authorization: Bearer <acces_token>"
 ```
 
 ожидаемый вывод
@@ -235,7 +235,7 @@ curl -X GET "http://127.0.0.1:8000/api/points/search/?latitude=54.44&longitude=5
 9. пример с несколькими точками
 ```bash
 curl -X GET "http://127.0.0.1:8000/api/points/search/?latitude=48.8584&longitude=2.2945&radius=500" \
-  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY4NTA5NTAyLCJpYXQiOjE3Njg1MDU5MDIsImp0aSI6ImNlZTZkODM4N2E1ODQ1MzY4OTg0ZjEyYTI0NzEyMjRhIiwidXNlcl9pZCI6IjEifQ.cfv8EbNAOdq9wN90SMp_mnMf44SJuIYpsDZjcJ8eM8E"
+  -H "Authorization: Bearer <acces_token>"
 ```
 
 ожидаемый вывод
@@ -247,10 +247,10 @@ curl -X GET "http://127.0.0.1:8000/api/points/search/?latitude=48.8584&longitude
 ```bash
 curl -X POST http://127.0.0.1:8000/api/points/messages/ \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY4NTA5NTAyLCJpYXQiOjE3Njg1MDU5MDIsImp0aSI6ImNlZTZkODM4N2E1ODQ1MzY4OTg0ZjEyYTI0NzEyMjRhIiwidXNlcl9pZCI6IjEifQ.cfv8EbNAOdq9wN90SMp_mnMf44SJuIYpsDZjcJ8eM8E" \
+  -H "Authorization: Bearer <acces_token>" \
   -d '{
         "point_id": 30,
-        "text": "это сталица республики Башкортостан"
+        "text": "это столица республики Башкортостан"
       }'
 ```
 
@@ -266,7 +266,7 @@ curl -X POST http://127.0.0.1:8000/api/points/messages/ \
 11. поиск сообщений по радиусу
 ```bash
 curl -X GET "http://127.0.0.1:8000/api/messages/search/?latitude=54.44&longitude=55.58&radius=5" \
-  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY4NTA5NTAyLCJpYXQiOjE3Njg1MDU5MDIsImp0aSI6ImNlZTZkODM4N2E1ODQ1MzY4OTg0ZjEyYTI0NzEyMjRhIiwidXNlcl9pZCI6IjEifQ.cfv8EbNAOdq9wN90SMp_mnMf44SJuIYpsDZjcJ8eM8E"
+  -H "Authorization: Bearer <acces_token>"
 ```
 
 ожидаемый вывод
@@ -280,8 +280,8 @@ curl -X GET "http://127.0.0.1:8000/api/messages/search/?latitude=54.44&longitude
 
 12. удаление сообщения
 ```bash
-curl -X DELETE "http://127.0.0.1:8000/api/messages/4/" \
-  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY4NTA5NTAyLCJpYXQiOjE3Njg1MDU5MDIsImp0aSI6ImNlZTZkODM4N2E1ODQ1MzY4OTg0ZjEyYTI0NzEyMjRhIiwidXNlcl9pZCI6IjEifQ.cfv8EbNAOdq9wN90SMp_mnMf44SJuIYpsDZjcJ8eM8E"
+curl -X DELETE "http://127.0.0.1:8000/api/messages/id/" \
+  -H "Authorization: Bearer <acces_token>"
 
 ```
 
