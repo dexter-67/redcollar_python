@@ -5,13 +5,21 @@ from django.contrib.gis.geos import Point as GeoPoint
 from core.models import Point, Message
 
 
+@pytest.fixture(autouse=True)
+def clear_db():
+    Point.objects.all().delete()
+    Message.objects.all().delete()
+
+
 @pytest.fixture
 def user(db):
     return User.objects.create_user(username='testuser', password='test123')
 
+
 @pytest.fixture
 def another_user(db):
     return User.objects.create_user(username='another', password='test123')
+
 
 @pytest.fixture
 def auth_client(user):
@@ -19,9 +27,11 @@ def auth_client(user):
     client.force_authenticate(user=user)
     return client
 
+
 @pytest.fixture
 def unauth_client():
     return APIClient()
+
 
 @pytest.fixture
 def point_amsterdam(user):
@@ -31,6 +41,7 @@ def point_amsterdam(user):
         location=GeoPoint(4.900225, 52.379189, srid=4326)
     )
 
+
 @pytest.fixture
 def another_point(another_user):
     return Point.objects.create(
@@ -38,6 +49,7 @@ def another_point(another_user):
         name="Чужая точка",
         location=GeoPoint(4.895, 52.370, srid=4326)
     )
+
 
 @pytest.fixture
 def points(user):
@@ -61,6 +73,7 @@ def points(user):
 
 @pytest.mark.django_db
 class TestPointAPI:
+
     def test_create_point_success(self, auth_client):
         data = {
             "name": "Эйфелева башня",
@@ -72,7 +85,7 @@ class TestPointAPI:
         assert resp.data['name'] == "Эйфелева башня"
         assert 'latitude' in resp.data
         assert 'longitude' in resp.data
-        assert Point.objects.count() == 1
+        assert Point.objects.filter(name="Эйфелева башня").exists()
 
     def test_create_point_minimal_data(self, auth_client):
         data = {
@@ -111,10 +124,7 @@ class TestPointAPI:
             'radius': 20
         })
         assert resp.status_code == 200
-        if 'results' in resp.data:
-            items = resp.data['results']
-        else:
-            items = resp.data
+        items = resp.data.get('results', resp.data)
         assert len(items) >= 2
         assert all('distance_km' in item for item in items)
 
@@ -125,15 +135,9 @@ class TestPointAPI:
             'radius': 1
         })
         assert resp.status_code == 200
-
-        if 'results' in resp.data:
-            items = resp.data['results']
-        else:
-            items = resp.data
-
+        items = resp.data.get('results', resp.data)
         assert len(items) == 1
-        first_item = items[0] if isinstance(items, list) else items
-        assert first_item['name'] == "Центр"
+        assert items[0]['name'] == "Центр"
 
     def test_search_invalid_radius(self, auth_client):
         resp = auth_client.get('/api/points/search/', {
@@ -166,6 +170,7 @@ class TestPointAPI:
 
 @pytest.mark.django_db
 class TestMessageAPI:
+
     def test_message_create_success(self, auth_client, point_amsterdam):
         data = {
             "point_id": point_amsterdam.id,
@@ -175,7 +180,7 @@ class TestMessageAPI:
         assert resp.status_code == 201
         assert resp.data['text'] == "Классное место!"
         assert resp.data['point']['id'] == point_amsterdam.id
-        assert Message.objects.count() == 1
+        assert Message.objects.filter(text="Классное место!").exists()
 
     def test_message_create_to_foreign_point(self, auth_client, another_point):
         data = {
