@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import PointViewSet, MessageViewSet
 
+from .views import MessageViewSet, PointViewSet
 
 points_search_view = PointViewSet.as_view({'get': 'search'})
 messages_search_view = MessageViewSet.as_view({'get': 'search'})

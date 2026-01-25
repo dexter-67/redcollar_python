@@ -1,6 +1,8 @@
-from rest_framework import serializers
 from django.contrib.gis.geos import Point as GeoPoint
-from .models import Point as PointModel, Message
+from rest_framework import serializers
+
+from .models import Message
+from .models import Point as PointModel
 
 
 class PointSerializer(serializers.ModelSerializer):
@@ -33,7 +35,11 @@ class PointSerializer(serializers.ModelSerializer):
             'id', 'name', 'latitude', 'longitude', 'created_by',
             'created_at', 'updated_at', 'distance_km'
         ]
-        read_only_fields = ['id', 'created_by', 'created_at', 'updated_at', 'distance_km']
+        read_only_fields = ['id',
+                            'created_by',
+                            'created_at',
+                            'updated_at',
+                            'distance_km']
         extra_kwargs = {
             'name': {
                 'max_length': 255,
@@ -52,13 +58,23 @@ class PointSerializer(serializers.ModelSerializer):
 
         if self.context['request'].method == 'POST':
             if lat is None or lon is None:
-                raise serializers.ValidationError({
-                    'detail': 'При создании точки необходимо указать latitude и longitude'
-                })
+                raise serializers.ValidationError(
+                    {
+                        "detail": (
+                            "При создании точки необходимо указать "
+                            "latitude и longitude"
+                        )
+                    }
+                )
         if (lat is not None or lon is not None) and location is not None:
-            raise serializers.ValidationError({
-                'detail': 'Укажите либо latitude+longitude, либо location, но не оба варианта'
-            })
+            raise serializers.ValidationError(
+                {
+                    "detail": (
+                        "Укажите либо latitude+longitude, "
+                        "либо location, но не оба варианта"
+                    )
+                }
+            )
         if lat is not None and lon is not None:
             location = GeoPoint(lon, lat, srid=4326)
             attrs['location'] = location
@@ -141,19 +157,26 @@ class MessageSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         text = attrs.get('text', '').strip()
         if not text:
-            raise serializers.ValidationError({
-                'text': 'Текст сообщения не может быть пустым или состоять только из пробелов'
-            })
+            raise serializers.ValidationError(
+                {
+                    "text": (
+                        "Текст сообщения не может быть пустым "
+                        "или состоять только из пробелов"
+                    )
+                }
+            )
         attrs['text'] = text
         return attrs
 
     def get_point(self, obj):
         if obj.point:
+            latitude = round(obj.point.location.y, 6) if obj.point.location else None
+            longitude = round(obj.point.location.x, 6) if obj.point.location else None
             return {
                 'id': obj.point.id,
                 'name': obj.point.name or f"Точка #{obj.point.id}",
-                'latitude': round(obj.point.location.y, 6) if obj.point.location else None,
-                'longitude': round(obj.point.location.x, 6) if obj.point.location else None,
+                'latitude': latitude,
+                'longitude': longitude,
             }
         return None
 

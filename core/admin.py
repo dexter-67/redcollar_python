@@ -1,6 +1,7 @@
 from django.contrib import admin
-from django.contrib.gis.admin import GISModelAdmin  # Для Django 5+
-from .models import Point, Message
+from django.contrib.gis.admin import GISModelAdmin
+
+from .models import Message, Point
 
 
 @admin.register(Point)
@@ -13,7 +14,11 @@ class PointAdmin(GISModelAdmin):
         },
     }
 
-    list_display = ('id', 'name', 'created_by', 'get_latitude', 'get_longitude', 'created_at')
+    list_display = ('id', 'name',
+                    'created_by',
+                    'get_latitude',
+                    'get_longitude',
+                    'created_at')
     list_filter = ('created_by', 'created_at')
     search_fields = ('name', 'created_by__username')
     readonly_fields = ('created_at', 'updated_at')
@@ -44,6 +49,7 @@ class MessageAdmin(admin.ModelAdmin):
         from django.urls import reverse
         from django.utils.html import format_html
         url = reverse('admin:core_point_change', args=[obj.point.id])
-        return format_html('<a href="{}">{}</a>', url, obj.point.name or f'Точка #{obj.point.id}')
+        point_name = obj.point.name or f"Точка #{obj.point.id}"
+        return format_html('<a href="{}">{}</a>', url, point_name)
     point_link.short_description = 'Точка'
     point_link.admin_order_field = 'point'

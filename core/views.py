@@ -1,13 +1,14 @@
-from rest_framework import viewsets, status, mixins
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import action
-from rest_framework.viewsets import GenericViewSet
-from django.contrib.gis.geos import Point as GeoPoint
 from django.contrib.gis.db.models.functions import Distance
+from django.contrib.gis.geos import Point as GeoPoint
 from django.contrib.gis.measure import D
-from .models import Point, Message
-from .serializers import PointSerializer, MessageSerializer
+from rest_framework import mixins, status, viewsets
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.viewsets import GenericViewSet
+
+from .models import Message, Point
+from .serializers import MessageSerializer, PointSerializer
 
 
 class PointViewSet(viewsets.ModelViewSet):
@@ -31,8 +32,12 @@ class PointViewSet(viewsets.ModelViewSet):
             radius = float(request.query_params.get('radius', 10))
         except (KeyError, ValueError, TypeError):
             return Response(
-                {"detail": "Обязательные параметры: latitude, longitude, radius (числа)"},
-                status=status.HTTP_400_BAD_REQUEST
+                {
+                    "detail": (
+                        "Обязательные параметры: latitude, longitude, radius (числа)"
+                    )
+                },
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         if not (-90 <= lat <= 90) or not (-180 <= lon <= 180):
@@ -77,7 +82,12 @@ class MessageViewSet(mixins.CreateModelMixin,
 
     def get_queryset(self):
         if self.action not in ['search']:
-            return self.queryset.filter(created_by=self.request.user).select_related('point', 'created_by')
+            return self.queryset.filter(
+                created_by=self.request.user
+            ).select_related(
+                "point",
+                "created_by",
+            )
         return self.queryset.select_related('point', 'created_by')
 
     def perform_create(self, serializer):
@@ -91,8 +101,12 @@ class MessageViewSet(mixins.CreateModelMixin,
             radius = float(request.query_params.get('radius', 10))
         except (KeyError, ValueError, TypeError):
             return Response(
-                {"detail": "Обязательные параметры: latitude, longitude, radius (числа)"},
-                status=status.HTTP_400_BAD_REQUEST
+                {
+                    "detail": (
+                        "Обязательные параметры: latitude, longitude, radius (числа)"
+                    )
+                },
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         if not (-90 <= lat <= 90) or not (-180 <= lon <= 180):

@@ -1,12 +1,9 @@
-from django.contrib.gis.db import models
 from django.contrib.auth.models import User
+from django.contrib.gis.db import models
 from django.utils.translation import gettext_lazy as _
 
 
 class Point(models.Model):
-    """
-    Географическая точка на карте, созданная пользователем.
-    """
     name = models.CharField(
         max_length=255,
         blank=True,
@@ -15,7 +12,7 @@ class Point(models.Model):
     )
     location = models.PointField(
         srid=4326,
-        spatial_index=True,               # ← Вот здесь создаётся пространственный индекс
+        spatial_index=True,
         verbose_name=_("Координаты"),
         help_text=_("Долгота и широта в WGS84 (EPSG:4326)")
     )
@@ -39,17 +36,8 @@ class Point(models.Model):
         verbose_name_plural = _("Точки")
         ordering = ["-created_at"]
         indexes = [
-            # Обычный индекс по создателю — ускоряет фильтрацию "только мои точки"
             models.Index(fields=["created_by"], name="point_by_user_idx"),
         ]
-        # Если хочешь уникальность названий внутри пользователя — раскомментируй
-        # constraints = [
-        #     models.UniqueConstraint(
-        #         fields=["created_by", "name"],
-        #         condition=models.Q(name__gt=""),
-        #         name="unique_point_name_per_user"
-        #     )
-        # ]
 
     def __str__(self):
         name_part = self.name if self.name else f"ID {self.id}"
@@ -57,19 +45,14 @@ class Point(models.Model):
 
     @property
     def latitude(self):
-        """Для удобства в сериализаторах и API-ответах"""
         return self.location.y
 
     @property
     def longitude(self):
-        """Для удобства в сериализаторах и API-ответах"""
         return self.location.x
 
 
 class Message(models.Model):
-    """
-    Сообщение, привязанное к конкретной гео-точке.
-    """
     point = models.ForeignKey(
         Point,
         on_delete=models.CASCADE,
@@ -104,4 +87,8 @@ class Message(models.Model):
         ]
 
     def __str__(self):
-        return f"Сообщение {self.id} от {self.created_by.username} к точке {self.point_id}"
+        return (
+            f"Сообщение {self.id} "
+            f"от {self.created_by.username} "
+            f"к точке {self.point_id}"
+        )

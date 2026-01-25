@@ -1,0 +1,27 @@
+[tool.ruff]
+target-version = "py311"
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "I",
+    "UP",
+    "B",
+    "DJ",
+    "T20",
+]
+
+ignore = [
+    "DJ001",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"**/migrations/*.py" = ["E501", "F401"]
+"**/__init__.py" = ["F401"]
+"manage.py" = ["T201"]
+"geopoints/settings.py" = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["config", "apps"]

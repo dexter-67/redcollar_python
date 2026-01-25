@@ -1,8 +1,9 @@
 import pytest
-from rest_framework.test import APIClient
 from django.contrib.auth.models import User
 from django.contrib.gis.geos import Point as GeoPoint
-from core.models import Point, Message
+from rest_framework.test import APIClient
+
+from core.models import Message, Point
 
 
 @pytest.fixture(autouse=True)
@@ -161,7 +162,11 @@ class TestPointAPI:
 
     def test_update_point_name_only(self, auth_client, point_amsterdam):
         data = {"name": "Новое название"}
-        resp = auth_client.patch(f'/api/points/{point_amsterdam.id}/', data, format='json')
+        resp = auth_client.patch(
+            f"/api/points/{point_amsterdam.id}/",
+            data,
+            format="json",
+        )
         assert resp.status_code == 200
         assert resp.data['name'] == "Новое название"
         assert resp.data['latitude'] == 52.379189
@@ -232,7 +237,8 @@ class TestMessageAPI:
         assert 'point_distance_km' in items[0]
         assert items[0]['point_distance_km'] is not None
 
-    def test_message_search_all_users_messages(self, auth_client, another_user, another_point):
+    def test_message_search_all_users_messages(
+            self, auth_client, another_user, another_point):
         Message.objects.create(
             point=another_point,
             created_by=another_user,
