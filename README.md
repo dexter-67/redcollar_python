@@ -185,7 +185,7 @@ curl -X GET http://127.0.0.1:8000/api/points/ \
 
 5. получение одной точки
 ```bash
-curl -X GET http://127.0.0.1:8000/api/points/id/ \
+curl -X GET http://127.0.0.1:8000/api/points/'id'/ \
   -H "Authorization: Bearer <acces_token>"
 ```
 
@@ -196,7 +196,7 @@ curl -X GET http://127.0.0.1:8000/api/points/id/ \
 
 6. обновление точки
 ```bash
-curl -X PATCH http://127.0.0.1:8000/api/points/id/ \
+curl -X PATCH http://127.0.0.1:8000/api/points/'id'/ \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer <acces_token>" \
   -d '{
@@ -280,7 +280,7 @@ curl -X GET "http://127.0.0.1:8000/api/messages/search/?latitude=54.44&longitude
 
 12. удаление сообщения
 ```bash
-curl -X DELETE "http://127.0.0.1:8000/api/messages/id/" \
+curl -X DELETE "http://127.0.0.1:8000/api/messages/'id'/" \
   -H "Authorization: Bearer <acces_token>"
 
 ```
@@ -317,7 +317,11 @@ curl -X POST http://127.0.0.1:8000/api/points/ \
 
 
 ## тесты
-тесты запускаются командой
+чтобы зайти внутрь работающего контейнера нужно выполнить команду (одну из них)
+```bash
+docker exec -it redcollar_pyton-web-1 bash
+docker-compose exec web bash
+```
 ```bash
 pytest
 ```
